@@ -1,0 +1,20 @@
+{
+  "name": "moto",
+  "version": "2.0.0-beta.2",
+  "private": true,
+  "type": "module",
+  "description": "MOTO: studio di motion graphic unificato con montaggio, UI Training e accessibilità",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "test:integration": "node tests/integration.cjs",
+    "test:deployment": "node tests/deployment.cjs"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.2"
+  }
+}
