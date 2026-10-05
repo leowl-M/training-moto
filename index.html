@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MOTO — animazioni di testo</title>
+<title>MOTO v2 beta — animazioni di testo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&family=Archivo:wght@100..900&family=Archivo+Black&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&family=Unbounded:wght@200..900&family=Bricolage+Grotesque:wght@200..800&family=Big+Shoulders+Display:wght@100..900&family=Anton&family=Fraunces:wght@100..900&family=Playfair+Display:wght@400..900&family=Instrument+Serif&family=DM+Serif+Display&family=JetBrains+Mono:wght@100..800&family=IBM+Plex+Mono:wght@300;400;500;700&display=swap">
@@ -13,44 +13,61 @@
 <body>
 <div class="app">
 <header>
-  <div class="brand"><b></b>MOTO<small>kit di animazione tipografica</small></div>
-  <div class="grp"><span>Formato</span><div class="seg" id="fmtSeg"></div></div>
-  <div class="grp"><span>Qualità</span><div class="seg" id="resSeg"></div></div>
-  <div class="grp"><span>FPS</span><select class="in" id="fpsSel"></select></div>
+  <div class="brand"><b></b>MOTO<span class="beta">v2 beta</span><span class="pname" id="projName" title="Il progetto aperto: ⌘S salva, ⇧⌘S salva con nome"></span></div>
+  <div class="hmid">
+  <div class="grp"><span>Formato</span><div class="seg" id="fmtSeg" role="group" aria-label="Formato del progetto"></div></div>
+  <div class="grp"><span>Qualità</span><div class="seg" id="resSeg" role="group" aria-label="Qualità del progetto"></div></div>
+  <div class="grp"><span>FPS</span><select class="in" id="fpsSel" aria-label="Fotogrammi al secondo"></select></div>
+  </div>
   <div class="sp"></div>
+  <button class="btn" id="bCmd" data-tip="Cerca ovunque · ⌘K"><i data-lucide="search"></i>Cerca<kbd>⌘K</kbd></button>
   <div class="grp">
     <button class="ib" id="bUndo" data-tip="Annulla · ⌘Z" aria-label="Annulla"><i data-lucide="undo-2"></i></button>
     <button class="ib" id="bRedo" data-tip="Ripeti · ⇧⌘Z" aria-label="Ripeti"><i data-lucide="redo-2"></i></button>
   </div>
   <div class="grp">
     <button class="btn" id="bNew" data-tip="Nuovo progetto (annullabile)"><i data-lucide="file-plus"></i>Nuovo</button>
-    <button class="btn" id="bLoad" data-tip="Carica un preset .json"><i data-lucide="folder-open"></i>Apri</button>
-    <button class="btn" id="bSave" data-tip="Salva preset · ⌘S"><i data-lucide="save"></i>Salva</button>
-    <input type="file" id="fLoad" accept=".json,application/json" hidden>
+    <button class="btn" id="bLoad" data-tip="Apri un progetto · ⌘O"><i data-lucide="folder-open"></i>Apri</button>
+    <button class="btn" id="bSave" data-tip="Salva il progetto · ⌘S"><i data-lucide="save"></i>Salva</button>
+    <input type="file" id="fLoad" accept=".moto,.json,application/json" hidden>
   </div>
+  <div class="brk"></div>
+  <div class="grp"><button class="ib on" id="bPL" data-tip="Libreria · [" aria-label="Mostra o nascondi la libreria" aria-pressed="true"><i data-lucide="panel-left"></i></button><button class="ib on" id="bPR" data-tip="Proprietà · ]" aria-label="Mostra o nascondi le proprietà" aria-pressed="true"><i data-lucide="panel-right"></i></button></div>
+  <button class="ib" id="bHelp" data-tip="Scorciatoie · ?" aria-label="Scorciatoie da tastiera"><i data-lucide="keyboard"></i></button>
   <div class="grp rel">
     <button class="btn pri" id="bExport" data-tip="Esporta · E"><i data-lucide="download"></i>Esporta</button>
     <div class="menu" id="expMenu">
       <button data-x="video"><span><i data-lucide="film"></i>Video</span><small id="vidHint">MP4 o WebM, in tempo reale</small></button>
+      <button data-x="multi"><span><i data-lucide="layout-template"></i>Video in più formati</span><small id="multiHint">Lo stesso montaggio in 16:9, 9:16… uno dopo l'altro</small></button>
       <button data-x="seq"><span><i data-lucide="images"></i>Sequenza PNG (.zip)</span><small id="seqHint">Frame esatti, con trasparenza. Ideale per After Effects</small></button>
       <button data-x="frame"><span><i data-lucide="image"></i>Frame corrente (.png)</span><small>Il fotogramma sotto la testina</small></button>
     </div>
   </div>
-  <button class="ib" id="bHelp" data-tip="Scorciatoie · ?" aria-label="Scorciatoie da tastiera"><i data-lucide="keyboard"></i></button>
 </header>
 <main>
-  <aside class="lib">
+  <aside class="lib" aria-label="Livelli e libreria degli effetti">
+    <div class="ltabs" id="lTabs" role="tablist"><button type="button" data-l="layers">Livelli</button><button type="button" data-l="fx">Effetti</button></div>
+    <div class="lyrpane" id="layersPane"></div>
+    <div id="fxPane">
     <div class="libhead">
       <div class="seg" id="tgtSeg"><button data-t="in" class="on">Assegna a entrata</button><button data-t="out">a uscita</button></div>
-      <input class="in" id="q" type="search" placeholder="Cerca effetto" aria-label="Cerca effetto">
+      <div class="srow"><input class="in" id="q" type="search" placeholder="Cerca effetto" aria-label="Cerca effetto"><button class="ib" id="bFavOnly" data-tip="Solo preferiti" aria-label="Mostra solo i preferiti" aria-pressed="false"><i data-lucide="star"></i></button></div>
     </div>
     <div id="lib"></div>
+    </div>
   </aside>
+  <div class="gutter" id="gLib" role="separator" aria-orientation="vertical" aria-label="Larghezza della libreria" tabindex="0" data-tip="Trascina per ridimensionare · doppio clic per chiudere"></div>
   <section class="stagecol">
     <div class="stagewrap" id="stageWrap">
       <div class="stageinfo" id="stageInfo"></div>
-      <canvas id="cv" width="1920" height="1080"></canvas>
+      <div class="stagectl" id="stageCtl">
+        <select class="in" id="zoomSel" aria-label="Zoom dell'anteprima" data-tip="Zoom · - = 0"></select>
+        <button class="ib" id="bFull" data-tip="Schermo intero · F" aria-label="Anteprima a schermo intero"><i data-lucide="maximize"></i></button>
+        <button class="ib" id="bExt" data-tip="Anteprima in una finestra a parte (per un monitor esterno)" aria-label="Anteprima su un altro schermo"><i data-lucide="monitor-up"></i></button>
+      </div>
+      <canvas id="cv" width="1920" height="1080" role="img" aria-label="Anteprima dell’animazione">Anteprima del progetto. Usa i controlli della timeline e delle proprietà per modificarlo.</canvas>
     </div>
+    <div class="gutter hz" id="gTl" role="separator" aria-orientation="horizontal" aria-label="Altezza della timeline" tabindex="0" data-tip="Trascina per alzare o abbassare la timeline · doppio clic: automatica"></div>
     <div class="transport">
       <div class="tbar">
         <button class="ib" id="bStart" data-tip="Inizio · Home" aria-label="Inizio"><i data-lucide="skip-back"></i></button>
@@ -58,11 +75,16 @@
         <button class="ib on" id="bPlay" data-tip="Play / pausa · Spazio" aria-label="Play / pausa"><i data-lucide="play" class="i-play"></i><i data-lucide="pause" class="i-pause"></i></button>
         <button class="ib" id="bNext" data-tip="Frame successivo · →" aria-label="Frame successivo"><i data-lucide="chevron-right"></i></button>
         <button class="ib" id="bKey" data-tip="Keyframe alla testina · K" aria-label="Aggiungi keyframe"><i data-lucide="diamond-plus"></i></button>
-        <div class="tc" id="tc">0:00<span>:00</span></div>
+        <div class="tc" id="tc" role="button" tabindex="0" aria-label="Vai al tempo" title="Clic per scrivere un tempo (es. 0:04:20, 4:20, 420 o +1:00)">0:00<span>:00</span></div>
         <div class="sp"></div>
         <label class="grp" data-tip="Ripeti in loop"><i data-lucide="repeat" class="gi"></i><span>Loop</span><span class="sw"><input type="checkbox" id="cLoop" checked><span></span></span></label>
+        <label class="grp" data-tip="Maniglie sul quadro · H"><i data-lucide="move" class="gi"></i><span>Maniglie</span><span class="sw"><input type="checkbox" id="cHand" checked><span></span></span></label>
         <label class="grp" data-tip="Aree sicure · G"><i data-lucide="layout-grid" class="gi"></i><span>Guide</span><span class="sw"><input type="checkbox" id="cGuide"><span></span></span></label>
       </div>
+      <div class="seqbar" id="seqbar"></div>
+      <div class="seqhost" id="seqhost"></div>
+      <details class="motion-editor" id="motionEditor" open>
+        <summary><span class="cliplab" id="clipLab">Livelli della clip grafica</span></summary>
       <div class="tl-tools">
         <strong>Timeline <span id="trackCount"></span></strong>
         <button class="btn sm" id="tlAdd">+ Testo</button>
@@ -85,25 +107,35 @@
       </div>
       <div class="tl-scroll" id="tlScroll" tabindex="0" aria-label="Timeline multitraccia. Trascina le clip per spostarle e i bordi delle fasi per regolarne la durata."><div class="timeline" id="tl"></div></div>
       <div class="tl-footer"><span id="tlHint">Trascina le clip per spostarle · i bordi regolano le fasi · Alt sospende l’aggancio</span><div class="marker-editor" id="markerEditor" hidden><label for="markerName">Marker</label><input class="in" id="markerName" type="text" maxlength="60" aria-label="Nome marker"><button class="btn sm" id="deleteMarker">Elimina marker</button></div></div>
+      </details>
     </div>
   </section>
-  <aside class="insp" id="insp"></aside>
+  <div class="gutter" id="gInsp" role="separator" aria-orientation="vertical" aria-label="Larghezza delle proprietà" tabindex="0"></div>
+  <aside class="insp" id="insp" aria-label="Proprietà della selezione"></aside>
 </main>
 </div>
-<div class="modal" id="modal"><div class="mbox"><h3 id="mTitle">Esportazione</h3><div class="note" id="mNote"></div><div class="pbar"><i id="mBar"></i></div><div class="bline"><button class="btn" id="mCancel">Annulla</button></div></div></div>
-<div class="modal" id="help"><div class="mbox"><h3>Scorciatoie da tastiera</h3>
+<div class="modal" id="modal"><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><h3 id="mTitle">Esportazione</h3><div class="note" id="mNote"></div><div class="pbar"><i id="mBar"></i></div><div class="bline"><button class="btn" id="mCancel">Annulla</button></div></div></div>
+<div class="modal" id="help"><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><h3 id="helpTitle">Scorciatoie da tastiera</h3>
   <dl class="keys">
     <dt><kbd>Spazio</kbd></dt><dd>Play / pausa</dd>
     <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Frame precedente / successivo</dd>
     <dt><kbd>⇧</kbd> + <kbd>←</kbd> <kbd>→</kbd></dt><dd>Salta di 10 frame</dd>
     <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>Inizio / fine clip</dd>
+    <dt><kbd>⌘</kbd> <kbd>K</kbd></dt><dd>Cerca ovunque: effetti, comandi, font, sezioni</dd>
+    <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Mostra / nascondi libreria e proprietà</dd>
+    <dt><kbd>H</kbd></dt><dd>Maniglie sul quadro (<kbd>⌥</kbd> trascinando: senza aggancio al centro)</dd>
     <dt><kbd>K</kbd></dt><dd>Keyframe alla testina</dd>
+    <dt>Nei livelli della clip</dt><dd><kbd>[</kbd> / <kbd>]</kbd>: keyframe precedente / successivo; <kbd>I</kbd> / <kbd>O</kbd>: intervallo anteprima; <kbd>+</kbd> / <kbd>−</kbd> / <kbd>0</kbd>: zoom delle tracce. Le frecce regolano il controllo selezionato.</dd>
+    <dt><kbd>⌥</kbd> + trascina</dt><dd>Duplica: clip sulla timeline, SVG, immagini e testi sul quadro</dd>
+    <dt><kbd>⌘</kbd> <kbd>C</kbd> · <kbd>⌘</kbd> <kbd>V</kbd></dt><dd>Copia e incolla (clip alla testina; livelli e testi sul quadro)</dd>
+    <dt><kbd>⌘</kbd> <kbd>D</kbd></dt><dd>Duplica la selezione</dd>
+    <dt><kbd>-</kbd> <kbd>=</kbd> · <kbd>0</kbd></dt><dd>Zoom dell'anteprima · Adatta</dd>
+    <dt><kbd>F</kbd></dt><dd>Anteprima a schermo intero (Esc per uscire)</dd>
     <dt><kbd>M</kbd></dt><dd>Marker alla testina</dd>
-    <dt><kbd>I</kbd> <kbd>O</kbd></dt><dd>Inizio / fine intervallo di anteprima</dd>
-    <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Keyframe precedente / successivo</dd>
-    <dt><kbd>⌘</kbd> <kbd>C</kbd> / <kbd>V</kbd></dt><dd>Copia / incolla il keyframe selezionato</dd>
-    <dt><kbd>⌫</kbd></dt><dd>Elimina il keyframe o marker selezionato</dd>
-    <dt><kbd>+</kbd> <kbd>−</kbd> <kbd>0</kbd></dt><dd>Zoom timeline / adatta</dd>
+    <dt><kbd>⇧</kbd> <kbd>M</kbd> · <kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>M</kbd></dt><dd>Marker successivo / precedente</dd>
+    <dt><kbd>S</kbd> · <kbd>C</kbd> · <kbd>V</kbd></dt><dd>Dividi alla testina · Lama · Selezione</dd>
+    <dt><kbd>⌫</kbd> · doppio clic</dt><dd>Sottotitoli: elimina le frasi selezionate · correggi il testo · <kbd>⌥</kbd> clic su una parola la divide lì. <kbd>⌘</kbd> clic, <kbd>⇧</kbd> clic, riquadro o <kbd>⌘</kbd> <kbd>A</kbd> per selezionarne più di una e spostarle insieme</dd>
+    <dt>Clic sul tempo</dt><dd>Scrivi dove andare: 0:04:20, 4:20, 420 (come in Premiere), 4,5 secondi, +1:00 per andare avanti</dd>
     <dt><kbd>G</kbd></dt><dd>Mostra / nascondi guide</dd>
     <dt><kbd>E</kbd></dt><dd>Menu esporta</dd>
     <dt><kbd>⌘</kbd> <kbd>Z</kbd></dt><dd>Annulla</dd>
@@ -117,8 +149,6 @@
   <div class="bline"><button class="btn" id="helpClose">Chiudi</button></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
-<script src="timeline.js"></script>
-<script src="effects-extra.js"></script>
-<script src="script.js"></script>
+<script type="module" src="/src/main.ts"></script>
 </body>
 </html>

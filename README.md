@@ -1,58 +1,58 @@
-# MOTO — kit di animazione tipografica
+# MOTO — progetto unificato
 
-Editor di motion design nel browser, senza build. Apri `index.html` oppure avvia un server locale dalla cartella del progetto:
+Una sola applicazione: la base funzionale di `moto-v2` con interfaccia, estetica, timeline dei livelli ed effetti di `training-motion`.
 
-```sh
-python3 -m http.server 8765
-```
+## Avvio
 
-Poi visita http://localhost:8765. I font Google e le icone richiedono una connessione; il motore di animazione è locale.
+Su Mac, doppio clic su **Avvia MOTO.command**. Il comando avvia MOTO su http://localhost:5173 e apre il browser. Lascia aperta la finestra di avvio mentre lavori.
 
-## Timeline multitraccia
-
-- Ogni blocco di testo e livello immagine ha una traccia. Il nome del testo seleziona i controlli nell’ispettore; il nome dell’immagine apre i suoi controlli.
-- Trascina una clip di testo per spostarne l’inizio e i keyframe insieme. I bordi regolano ritardo, entrata, pausa, uscita e coda. Le durate sono mostrate nei suggerimenti al passaggio del puntatore.
-- Trascina una clip immagine per spostarla; i bordi impostano inizio e fine. Spostando un’immagine con fine automatica, la durata attuale viene mantenuta e la fine diventa esplicita. Le immagini possono estendere la durata del progetto oltre il testo.
-- Usa **Aggancia** per allinearti a fasi, clip, keyframe e marker. **Alt** sospende l’aggancio magnetico durante il trascinamento; rimane la precisione al fotogramma.
-- Lo zoom va dal 100% al 1600%, con scorrimento orizzontale e nomi delle tracce fissi. **Adatta** ripristina la vista completa.
-- **+ Marker** aggiunge un riferimento alla testina. Puoi rinominarlo nella barra sotto la timeline, trascinarlo o eliminarlo. Anche il doppio clic nella riga dei marker ne aggiunge uno.
-- Seleziona un keyframe per copiarlo e incollarlo alla testina, anche su un altro testo. Incollare su un keyframe esistente ne aggiorna i valori senza creare duplicati. Le frecce accanto al rombo raggiungono il keyframe precedente o successivo.
-- **Intervallo anteprima**, **In** e **Out** delimitano la porzione da riprodurre. Con Loop attivo viene ripetuta; altrimenti la riproduzione si ferma alla fine dell’intervallo. L’esportazione continua a usare l’intero progetto.
-- **Esc** annulla un trascinamento. Le modifiche completate supportano annulla/ripeti, salvataggio automatico e preset JSON. I preset precedenti restano compatibili.
-
-## Scorciatoie aggiunte
-
-| Tasto | Azione |
-| --- | --- |
-| M | Marker alla testina |
-| I / O | Inizio / fine intervallo di anteprima |
-| [ / ] | Keyframe precedente / successivo |
-| ⌘/Ctrl C / V | Copia / incolla keyframe selezionato |
-| Backspace / Delete | Elimina keyframe o marker selezionato |
-| + / − / 0 | Aumenta zoom / riduci zoom / adatta |
-
-Il pulsante della tastiera mostra anche le scorciatoie esistenti.
-
-## 20 effetti aggiuntivi
-
-Le due categorie **Studio · ingressi** e **Studio · maschere** sono in cima alla libreria. Puoi assegnare i 14 effetti a entrata o uscita e regolarne i parametri nell’ispettore. Le sei nuove animazioni continue si trovano all’inizio di **Movimento continuo** e si possono sovrapporre alle transizioni.
-
-| Gruppo | Effetti |
-| --- | --- |
-| 8 ingressi cinetici | Fionda, Zig-zag, Ventaglio, Origami, Passi meccanici, Elastico laterale, Nastro trasportatore, Intreccio |
-| 6 maschere | Iride, Diamante, Taglio diagonale, Veneziana, Scacchiera, Pettine |
-| 6 movimenti continui | Orbita ellittica, Figura a otto, Battito, Rotazione continua, Onda di taglio, Interferenza |
-
-Le maschere funzionano anche sui livelli immagine. Tutti i parametri usano il salvataggio e l’esportazione già presenti. Le animazioni sono calcolate dal tempo del fotogramma, così anteprima e rendering della sequenza seguono lo stesso movimento.
-
-## Verifica
-
-Il test `tests/timeline.test.cjs` usa Playwright e un server locale sulla porta 8765. Verifica creazione e selezione delle tracce, spostamento coordinato dei keyframe, annulla/ripeti, annullamento del trascinamento, zoom e scorrimento, marker, copia/incolla, intervallo di anteprima, ripristino automatico, preset precedenti e tempi delle immagini. Controlla anche il layout mobile e gli errori del browser.
-
-Con Playwright installato e Chromium disponibile:
+Per l’avvio dal terminale, con Node.js installato:
 
 ```sh
-node tests/timeline.test.cjs
+npm ci
+npm run dev
 ```
 
-Il test `tests/effects.test.cjs` verifica i 20 nuovi effetti: identificatori unici, valori limite dei parametri, geometrie valide, stato finale, rendering di entrata e uscita, maschere sulle immagini e salvataggio dei preset. Usa lo stesso server locale e Playwright del test timeline.
+Per eseguire anche i test usa Node.js 24 o successivo. Chrome e gli altri browser Chromium offrono il supporto più completo per video e file locali.
+
+## Funzioni integrate
+
+- Montaggio multitraccia di video, audio e clip grafiche; transizioni, velocità, effetti colore, stabilizzazione, sottotitoli, camera e SVG della versione del collega.
+- Stile scuro Training, tipografia di sistema, layout adattivo e correzioni di dimensionamento del tuo progetto.
+- Timeline dei livelli dentro ogni clip grafica: testi, immagini e SVG, trascinamento, fasi, aggancio, zoom, marker, keyframe, copia/incolla e intervallo di anteprima.
+- I tuoi 20 effetti Studio: 14 transizioni e maschere, più 6 movimenti continui. Sono disponibili nella libreria, nei preset, nelle immagini e nel rendering di esportazione.
+- Controlli delle proprietà con etichette accessibili; navigazione da tastiera; finestre modali con gestione del focus; rispetto della preferenza per ridurre il movimento.
+
+La timeline superiore monta le clip. **Livelli della clip** modifica testi e grafica della clip selezionata. La sezione si può richiudere per dare più spazio all’anteprima.
+
+Nei livelli della clip: `[` / `]` raggiungono i keyframe; `I` / `O` impostano l’intervallo di anteprima; `+` / `−` / `0` regolano lo zoom. Le frecce modificano il controllo selezionato di un fotogramma; con Maiusc di dieci fotogrammi. Fuori da questa sezione rimangono le scorciatoie della versione del collega.
+
+L’intervallo limita la riproduzione di anteprima; l’esportazione usa l’intero montaggio. Marker e intervallo dei livelli sono indipendenti per ogni clip grafica. Il salvataggio automatico, annulla/ripeti e i file `.moto` li conservano insieme alle altre funzioni. I preset JSON del tuo progetto restano caricabili.
+
+## Verifica e build
+
+```sh
+npm test
+npm run typecheck
+npm run build
+```
+
+La build pronta per un servizio di hosting è in `dist/` dopo `npm run build`.
+
+Il test nel browser richiede Playwright e Chromium. Con il server di sviluppo acceso, in un secondo terminale:
+
+```sh
+npm install --no-save --package-lock=false playwright
+npx playwright install chromium
+npm run test:integration
+```
+
+È possibile passare a `node tests/integration.cjs` il percorso di una copia di Playwright già installata. Il test verifica effetti, timeline, annulla/ripeti, salvataggio, media, esportazione PNG, tastiera, schermi piccoli e movimento ridotto. Le immagini di verifica sono in `tests/tmp/`, esclusa dalla distribuzione dei sorgenti.
+
+## Documentazione
+
+- [INTEGRAZIONE.md](INTEGRAZIONE.md): provenienza, modifiche e risultati della verifica.
+- [ARCHITETTURA.md](ARCHITETTURA.md): struttura dei moduli della base v2.
+- [REGISTRO.md](REGISTRO.md): cronologia delle funzionalità aggiunte dal collega.
+
+Questa è la versione locale unificata. Gli indirizzi online e i repository di origine non vengono aggiornati automaticamente da questa cartella.
